@@ -49,16 +49,6 @@ class Predictor:
             shutil.copyfileobj(file, audio_file)
         return audio_path
 
-    def load_audio_from_url(self, url):
-        response = requests.get(url)
-        if response.status_code != 200:
-            raise Exception("Failed to fetch audio from the provided URL.")
-        audio_data = BytesIO(response.content)
-        audio_path = "temp_audio.wav"
-        with open(audio_path, "wb") as audio_file:
-            audio_file.write(audio_data.read())
-        return audio_path
-
     def predict(self, audio_path):
         if not self.check_model_files_exist():
             raise FileNotFoundError(
