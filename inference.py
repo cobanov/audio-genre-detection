@@ -1,4 +1,5 @@
 from predict import Predictor
 
 prd = Predictor()
-prd.predict('./assets/sample.mp3')
+result = prd.predict('./assets/sample.mp3')
+print(result)
