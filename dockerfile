@@ -16,24 +16,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libavcodec-dev \
     libavformat-dev \
     libavutil-dev \
-    libavresample-dev \
     libsamplerate0-dev \
     libtag1-dev \
     libchromaprint-dev \
     curl
 
-# Clone the Essentia repository from GitHub
-RUN git clone https://github.com/MTG/essentia.git
-
-# Build and install Essentia
-RUN cd essentia && \
-    mkdir build && cd build && \
-    cmake .. && \
-    make && \
-    make install
 
 # Install the required Python packages
 RUN pip3 install essentia-tensorflow
 
-# Start a bash shell as the entry point
+WORKDIR /app
+RUN git clone https://github.com/cobanov/audio-genre-detection.git
+
+# Change working directory to the audio-genre-detection folder and run the download.sh script
+WORKDIR /app/audio-genre-detection
 CMD ["/bin/bash"]
