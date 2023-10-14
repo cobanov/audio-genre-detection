@@ -25,9 +25,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install the required Python packages
 RUN pip3 install essentia-tensorflow
 
+# Create a working directory
 WORKDIR /app
+
+# Clone the GitHub repository
 RUN git clone https://github.com/cobanov/audio-genre-detection.git
 
-# Change working directory to the audio-genre-detection folder and run the download.sh script
+# Change working directory to the audio-genre-detection folder
 WORKDIR /app/audio-genre-detection
+
 CMD ["/bin/bash"]
