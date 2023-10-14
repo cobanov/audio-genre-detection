@@ -23,3 +23,8 @@ cd audio-genre-detection
 docker build -t audio-genre-detection .
 docker run -it -p 8000:8000 audio-genre-detection
 ```
+3. Open SwaggerAPI interface and upload audio file
+
+```
+http://localhost:8000/docs#/
+```
