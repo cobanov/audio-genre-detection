@@ -23,19 +23,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 
 # Install the required Python packages
-RUN pip3 install essentia-tensorflow fastapi uvicorn
+RUN pip3 install essentia-tensorflow fastapi uvicorn requests
 
 # Create a working directory
 WORKDIR /app
 
 # Clone the GitHub repository
-RUN git clone https://github.com/cobanov/audio-genre-detection.git
+RUN git clone https://github.com/cobanov/audio-genre-detection.git .
+RUN git checkout fastapi
 
-# Change working directory to the audio-genre-detection folder
-WORKDIR /app/audio-genre-detection
+RUN ["sh", "download.sh"]
 
 # Expose the port that the application will run on
 EXPOSE 8000
 
+# CMD ["/bin/bash"]
 # Define the command to run your FastAPI application
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "predict_v2:app", "--host", "0.0.0.0", "--port", "8000"]
