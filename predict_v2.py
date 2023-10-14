@@ -16,11 +16,8 @@ from labels import labels
 
 app = FastAPI()
 
-
 class PredictionRequest(BaseModel):
-    audio_file: UploadFile = None
-    audio_url: str = None
-
+    audio_file: UploadFile = File(None)  # Use UploadFile for file uploads
 
 class Predictor:
     def __init__(self):
@@ -28,10 +25,6 @@ class Predictor:
         self.classification_model_file = "./models/genre_discogs400-discogs-effnet-1.pb"
         self.output = "activations"
         self.sample_rate = 16000
-
-        # Check if model files exist, and download if not
-        if not self.check_model_files_exist():
-            self.download_models()
 
         self.loader = MonoLoader()
         self.tensorflowPredictEffnetDiscogs = TensorflowPredictEffnetDiscogs(
@@ -49,10 +42,6 @@ class Predictor:
         return os.path.exists(self.embedding_model_file) and os.path.exists(
             self.classification_model_file
         )
-
-    def download_models(self):
-        # Run the download.sh script to fetch the model files
-        subprocess.run(["sh", "download.sh"])
 
     def load_audio_from_file(self, file):
         audio_path = "temp_audio.wav"
@@ -108,12 +97,6 @@ predictor = Predictor()
 async def predict_genre(request: PredictionRequest):
     if request.audio_file:
         audio_path = predictor.load_audio_from_file(request.audio_file.file)
-    elif request.audio_url:
-        audio_path = predictor.load_audio_from_url(request.audio_url)
-    else:
-        raise ValueError(
-            "You must provide either an audio file or an audio URL for prediction."
-        )
 
     try:
         genre_primary, genre_full, genre_secondary = predictor.predict(audio_path)
