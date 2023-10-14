@@ -20,8 +20,8 @@ class Predictor:
     def __init__(self):
         """Load the model into memory and create the Essentia network for predictions"""
 
-        self.embedding_model_file = "/models/discogs-effnet-bs64-1.pb"
-        self.classification_model_file = "/models/genre_discogs400-discogs-effnet-1.pb"
+        self.embedding_model_file = "./models/discogs-effnet-bs64-1.pb"
+        self.classification_model_file = "./models/genre_discogs400-discogs-effnet-1.pb"
         self.output = "activations"
         self.sample_rate = 16000
 
