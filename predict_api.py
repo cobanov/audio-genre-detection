@@ -1,23 +1,18 @@
-from fastapi import FastAPI, File, UploadFile, Form
-from pydantic import BaseModel
+from fastapi import FastAPI, UploadFile
 import numpy as np
+
 from essentia.standard import (
     MonoLoader,
     TensorflowPredictEffnetDiscogs,
     TensorflowPredict2D,
 )
 import os
-import subprocess
-import requests
-from io import BytesIO
 import shutil
 
 from labels import labels
 
 app = FastAPI()
 
-class PredictionRequest(BaseModel):
-    audio_file: UploadFile = File(None)  # Use UploadFile for file uploads
 
 class Predictor:
     def __init__(self):
@@ -84,9 +79,13 @@ predictor = Predictor()
 
 
 @app.post("/predict/")
-async def predict_genre(request: PredictionRequest):
-    if request.audio_file:
-        audio_path = predictor.load_audio_from_file(request.audio_file.file)
+async def predict_genre(audio_file: UploadFile):
+    # Check if the uploaded file is an audio file
+    if audio_file.filename.endswith((".mp3", ".wav")):
+        # Save the uploaded file temporarily
+        audio_path = "temp_audio.wav"
+        with open(audio_path, "wb") as audio_data:
+            audio_data.write(audio_file.file.read())
 
     try:
         genre_primary, genre_full, genre_secondary = predictor.predict(audio_path)
